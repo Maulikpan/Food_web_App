@@ -1,0 +1,18 @@
+<header id="header">
+    page Header
+    <ul id="ul_list">
+        <% if(locals.user){ %>  <%/*%>because we already set data of sign in user into the locals.user<%*/%>
+        <li><%= locals.user.name %></li>
+        <li><a href="/users/profile"><%=locals.user.name%>'s profile</a></li>
+        <li><a href="/users/sign-out"><button>Sign Out</button></a></li>
+        <li><a href="/users/log-out"><button>Delete User Account</button></a></li>
+        <%}else{%>
+            <li>
+                <a href="/users/sign-in"><button>Sign In</button></a>
+            </li>
+            <li>
+                <a href="/users/sign-up"><button>Sign Up</button></a>
+            </li>
+            <% } %>
+    </ul>
+</header>  

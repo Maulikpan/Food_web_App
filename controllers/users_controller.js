@@ -7,27 +7,31 @@ const otpGenerator = require('otp-generator');
 const { send } = require('process');
 const OTPEmailWorker = require('../workers/OTP_email_worker');
 const otpmailer = require('../mailers/OTP_mailer')
-var Outer_OTP;
-var UserName='';
-function settinUserName(userName)
+var Outer_Access_OTP;
+var UserName;
+var UserEmail;
+function settinUserName(userName,userEmail)
 { 
   UserName = userName;
+  UserEmail = userEmail
 }
+
 var sendOTP = function (userName,req) {
     var OTP = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false ,lowerCaseAlphabets:false});
-    Outer_OTP=OTP;
+    Outer_Access_OTP=OTP;
     const jobData = {
         name: userName,
         OTP: OTP
     };
     console.log(jobData);
-    let job = queue.create('emails', jobData).save(function (err) {
-        if (err) {
-            console.log('Error in creating a queue and sending comment to queue', err);
-            return;
-        }
-        console.log('Job enqueued:', job.id);
-    });
+    //creating job to send emails
+    // let job = queue.create('emails', jobData).save(function (err) {
+    //     if (err) {
+    //         console.log('Error in creating a queue and sending comment to queue', err);
+    //         return;
+    //     }
+    //     console.log('Job enqueued:', job.id);
+    // });
 }
 module.exports.profile = function (req, res) {
     {
@@ -75,21 +79,11 @@ module.exports.create = function (req, res) {
     User.findOne(query)
         .then((user) => {
             if (!user) {
-                User.create(req.body)
-                    .then((user) => {
-                        console.log('New user added successfully!', user);
-                        settinUserName(user.name);
-                        req.flash('message_otp', `OTP succesfully send ${req.body.email} over this email`);
-                        sendOTP(user.name,req);
+                        settinUserName(req.body.name,req.body.email);
+                        sendOTP(req.body.name,req);
                         return res.render('otp', { title: 'OTP | Varify' });
-                    })
-                    .catch((err) => {
-                        console.log('Error in creating a user:', err);
-                        return res.redirect('back');
-                    });
             } else {
                 console.log('User already exists with the same credentials');
-                req.flash('error','User already exists!')
                 res.redirect('back');
             }
         })
@@ -100,6 +94,7 @@ module.exports.create = function (req, res) {
 
 }
 module.exports.createSession = function (req, res) {
+    // sendOTP(UserName,req);
     req.flash('success', 'Logged in successfuly');
     return res.redirect('/');
 }
@@ -123,9 +118,20 @@ module.exports.logOut = async function (req, res) {
 }
 module.exports.otpVarification = function (req, res) {
     console.log(req.body);
-    if (Outer_OTP == req.body.OTP) {
-        req.flash('success', 'User succesfully logged in!!');
-        return res.render('home',  {title: "Home | Page" })
+    if (Outer_Access_OTP == req.body.OTP) {
+        User.create({
+            name:UserName,
+            email:UserEmail,
+            isValid:true
+        })
+                    .then((user) => {
+                        console.log('New user added successfully!', user);
+                        req.flash('success','sign up successfully completed')
+                        return  res.redirect('/users/sign-in')
+                    })
+                    .catch((err) => {
+                        console.log('Error in creating a user:', err);
+                    });
     }
     else {
         req.flash('error', 'Error in login or invalid OTP');

@@ -7,27 +7,16 @@ passport.use(new LocalStrategy({
     usernameField: 'email',
     passReqToCallback: true
 },
-    function (req, email, password, done) {
+    function (req, email, done) {
         User.findOne({ email: email })
             .then((user) => {
                 if (!user) {
                     return done(null, false);
                 }
-
-                bcrypt.compare(password, user.password)
-                    .then((isMatch) => {
-                        if (!isMatch) {
-                            console.log('Invalid username/password');
-                            req.flash('error', 'Invalid Username or password');
-                            return done(null, false);
-                        }
-
-                        return done(null, user);
-                    })
-                    .catch((err) => {
-                        console.error('Error in comparing passwords:', err);
-                        return done(err);
-                    });
+                else if(user && user.isValid)
+                {
+                  return done(null, user);
+                }
             })
             .catch((err) => {
                 console.log('Error in finding user:', err);
@@ -38,6 +27,7 @@ passport.use(new LocalStrategy({
 ));
  passport.serializeUser(function(user,done)
 {
+  console.log(user);
      return done(null,user.id);
 });
 

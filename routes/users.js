@@ -7,8 +7,8 @@ router.post('/update/:id', passport.checkAuthentication, usersControllers.update
 router.get('/sign-up', usersControllers.signUp);
 router.get('/sign-in', usersControllers.signIn);
 router.post('/createUser', usersControllers.create);
-router.post('/otp-varification',usersControllers.otpVarification);
-router.post('/resend-Otp',usersControllers.resendOtp);
+// router.post('/otp-varification',usersControllers.otpVarification);
+// router.post('/resend-Otp',usersControllers.resendOtp);
 router.post('/create-session', passport.authenticate(
     'local',
     { failureRedirect: '/users/sign-in' },

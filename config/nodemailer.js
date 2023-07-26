@@ -10,7 +10,7 @@ let transpoter = nodeMailer.createTransport
     secure:true,
     auth: {
         user:'easywayforweb@gmail.com',
-        pass:'drcwjclxwmcgomyc'  //app password of google
+        pass:'vhykrhbvirgpxrjf'  //app password of google
     }
 });
 

@@ -5,9 +5,8 @@ const LocalStrategy = require('passport-local').Strategy;
 // Authentication using Passport.js local strategy
 passport.use(new LocalStrategy({
     usernameField: 'email',
-    passReqToCallback: true
 },
-    function (req, email, done) {
+    function (email, done) {
         User.findOne({ email: email })
             .then((user) => {
                 if (!user) {
@@ -28,7 +27,7 @@ passport.use(new LocalStrategy({
  passport.serializeUser(function(user,done)
 {
   console.log(user);
-     return done(null,user.id);
+  return done(null,user.id);
 });
 
 passport.deserializeUser(function(id,done)

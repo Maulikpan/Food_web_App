@@ -1,7 +1,7 @@
 //require to library 
 const mongoose = require('mongoose');
 //connect  odm( mongoose )to database
-mongoose.connect('mongodb://127.0.0.1/Food_Delivery');
+mongoose.connect('mongodb://127.0.0.1/Food_Delivery_web_App');
 //acquire a connection to access (to check if it succesfull) 
 const db=mongoose.connection; //db is definition for conection of mongoose to db;
 //error if not connecting successfull

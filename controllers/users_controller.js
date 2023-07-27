@@ -173,10 +173,12 @@ module.exports.otpVarification_For_SignUp = function (req, res) {
                     })
                     .catch((err) => {
                         console.log('Error in creating a user:', err);
+                        return res.redirect('/users/sign-up');
                     });
     }
     else {
         req.flash('error', 'Error in login or invalid OTP');
+        return res.redirect('/users/sign-up');
     }
 }
 module.exports.resendOtp_SignUp= function (req, res) {
@@ -186,14 +188,36 @@ module.exports.resendOtp_SignIn = function(req,res)
 {
     send_Sign_In_OTP(userNameSignIn,userEmailSignIn,req);
 }
-module.exports.otpVarification_For_SignIn = function(req,res)
-{
-    console.log(req.body);
+module.exports.otpVarification_For_SignIn = function (req, res) {
     if (Outer_Access_SignIn_OTP == req.body.OTP) {
-                        
+      req.body.email = userEmailSignIn;
+      req.flash('error', 'Error in login or invalid OTP');
+      
+      // Call passport.authenticate with custom callback function
+      passport.authenticate('local', { failureRedirect: '/users/sign-in' }, function (err, user, info) {
+        if (err) {
+          // Handle error
+          console.error(err);
+          return;
+        }
+  
+        if (!user) {
+          // If authentication fails, redirect to the sign-in page
+          return res.redirect('/users/sign-in');
+        }
+  
+        // If authentication is successful, log the user in
+        req.logIn(user, function (err) {
+          if (err) {
+            // Handle login error
+            console.error('Error in login:', err);
+            return;
+          }
+  
+          req.flash('success', 'You signed in successfully!');
+          return res.redirect('/users/profile');
+        });
+      })(req, res); // Call the authenticate function with req and res.
     }
-    else {
-        req.flash('error', 'Error in login or invalid OTP');
-        return;
-    }
-}
+  };
+  

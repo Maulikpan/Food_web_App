@@ -33,7 +33,7 @@ app.use(session({
   },
   store: MongoStore.create(
     {
-      mongoUrl: 'mongodb://127.0.0.1/Food_Delivery',
+      mongoUrl: 'mongodb://127.0.0.1/Food_Delivery_web_App',
       autoRemove: 'disabled',
     }
   )

@@ -13,10 +13,6 @@ router.post('/Sign_in_otp-varification',usersControllers.otpVarification_For_Sig
 router.post('/sign-up_resend-Otp',usersControllers.resendOtp_SignUp);
 router.post('/otp-varification',usersControllers.sending_Sign_In_OTP);
 router.post('/sign-in_resend-Otp',usersControllers.resendOtp_SignIn);
-router.post('/create-session', passport.authenticate(
-    'local',
-    { failureRedirect: '/users/sign-in' },
-), usersControllers.createSession);
 router.get('/sign-out', usersControllers.destroySession);
 router.get('/log-out', usersControllers.logOut);
 

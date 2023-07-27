@@ -4,30 +4,32 @@ const LocalStrategy = require('passport-local').Strategy;
 
 // Authentication using Passport.js local strategy
 passport.use(new LocalStrategy({
-    usernameField: 'email',
-},
-    function (email, done) {
-        User.findOne({ email: email })
-            .then((user) => {
-                if (!user) {
-                    return done(null, false);
-                }
-                else if(user && user.isValid)
-                {
-                  return done(null, user);
-                }
-            })
-            .catch((err) => {
-                console.log('Error in finding user:', err);
-                req.flash('error', err);
-                return done(err);
-            });
-    }
-));
+  usernameField: 'email',
+  passReqToCallback: true
+}, function (req, email, done) {
+  const otp = req.body.OTP; // Assuming the OTP is sent in the request body
+
+  User.findOne({ email: email })
+    .then((user) => {
+      if (!user) {
+        return done(null, false);
+      }
+      else
+      {
+        return done(null, user);
+      } 
+    })
+    .catch((err) => {
+      console.log('Error in finding user:', err);
+      req.flash('error', err);
+      return done(err);
+    });
+}));
+
  passport.serializeUser(function(user,done)
 {
   console.log(user);
-  return done(null,user.id);
+     return done(null,user.id);
 });
 
 passport.deserializeUser(function(id,done)

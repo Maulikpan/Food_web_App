@@ -1,6 +1,7 @@
 const User = require('../models/user');
-const passportLocal = require('../config/passport-local-strategy');
-const passport = require('passport');
+const passLocal = require('passport-local');
+const passportLocalStrategy = require('../config/passport-local-strategy');
+const passport=require('passport');
 const fs = require('fs');  //to deal with file system
 const path = require('path');
 const queue = require('../config/kue');
@@ -8,7 +9,7 @@ const otpGenerator = require('otp-generator');
 const { send } = require('process');
 const OTPEmailWorker = require('../workers/OTP_email_worker');
 const otpmailer = require('../mailers/OTP_mailer');
-const axios = require('axios');
+const { log } = require('console');
 var Outer_Access_SignUp_OTP;
 var Outer_Access_SignIn_OTP;
 var userNameSignUp;
@@ -139,6 +140,7 @@ module.exports.sending_Sign_In_OTP = function(req,res)
 
 module.exports.createSession = function (req, res) {
     req.flash('success', 'Logged in successfuly OP');
+    return res.redirect('/users/profile');
 }
 module.exports.destroySession = function (req, res) {
     console.log(res.locals.flash);
@@ -162,8 +164,8 @@ module.exports.otpVarification_For_SignUp = function (req, res) {
     console.log(req.body);
     if (Outer_Access_SignUp_OTP == req.body.OTP) {
         User.create({
-            name:UserName,
-            email:UserEmail,
+            name:userNameSignUp,
+            email:userEmailSignUp,
             isValid:true
         })
                     .then((user) => {
@@ -188,36 +190,15 @@ module.exports.resendOtp_SignIn = function(req,res)
 {
     send_Sign_In_OTP(userNameSignIn,userEmailSignIn,req);
 }
-module.exports.otpVarification_For_SignIn = function (req, res) {
+module.exports.otpVarification_For_SignIn = function (req, res, next) {
     if (Outer_Access_SignIn_OTP == req.body.OTP) {
       req.body.email = userEmailSignIn;
-      req.flash('error', 'Error in login or invalid OTP');
-      
+      console.log(req.body);
       // Call passport.authenticate with custom callback function
-      passport.authenticate('local', { failureRedirect: '/users/sign-in' }, function (err, user, info) {
-        if (err) {
-          // Handle error
-          console.error(err);
-          return;
-        }
-  
-        if (!user) {
-          // If authentication fails, redirect to the sign-in page
-          return res.redirect('/users/sign-in');
-        }
-  
-        // If authentication is successful, log the user in
-        req.logIn(user, function (err) {
-          if (err) {
-            // Handle login error
-            console.error('Error in login:', err);
-            return;
-          }
-  
-          req.flash('success', 'You signed in successfully!');
-          return res.redirect('/users/profile');
-        });
-      })(req, res); // Call the authenticate function with req and res.
+      passport.authenticate('local', { failureRedirect: '/users/sign-in' }, this.createSession)(req, res, next); // Add `(req, res, next)`
+    } else {
+      req.flash('error', 'error in login or invalid OTP')
+      return res.redirect('/users/sign-in');
     }
-  };
+  }
   

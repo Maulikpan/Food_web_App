@@ -1,6 +1,8 @@
 const express = require('express');
-const passport = require('passport');
-const passportLocalStrategy = require('passport-local');
+const passLocal = require('passport-local');
+const passportLocalStrategy = require('../config/passport-local-strategy');
+const passport=require('passport');
+// const passportLocalStrategy = require('passport-local');
 const router = express.Router();
 const usersControllers = require('../controllers/users_controller')
 router.get('/profile', passport.checkAuthentication, usersControllers.profile);

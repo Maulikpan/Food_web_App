@@ -131,7 +131,7 @@ module.exports.sending_Sign_In_OTP = function(req,res)
      .then((user)=>{
          send_Sign_In_OTP(user.name,user.email,req);
          settinUserDetailForSignInResendOtp(user.name,user.email,req);
-         return res.render('Sign_in_otp',{title:'OTP | Varify'})
+         return res.render('Sign_in_otp',{title:'OTP | Varify',email:user.email})
      })
      .catch((err)=>{
         console.log('error',err)
@@ -190,15 +190,11 @@ module.exports.resendOtp_SignIn = function(req,res)
 {
     send_Sign_In_OTP(userNameSignIn,userEmailSignIn,req);
 }
-module.exports.otpVarification_For_SignIn = function (req, res, next) {
+module.exports.otpVarification_For_SignIn = function (req, res) {
     if (Outer_Access_SignIn_OTP == req.body.OTP) {
-      req.body.email = userEmailSignIn;
-      console.log(req.body);
-      // Call passport.authenticate with custom callback function
-      passport.authenticate('local', { failureRedirect: '/users/sign-in' }, this.createSession)(req, res, next); // Add `(req, res, next)`
+     return res.redirect('/');
     } else {
       req.flash('error', 'error in login or invalid OTP')
       return res.redirect('/users/sign-in');
     }
   }
-  

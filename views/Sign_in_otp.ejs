@@ -1,9 +1,10 @@
 <div>
-    <form action="/users/Sign_in_otp-varification" method="post">
-    <input type="number" name="OTP" placeholder="Enter OTP" style="text-align: center;">
-    <input type="submit" name="" id="">
+    <form action="/users/sign-in-otpvarification" method="POST">
+        <input type="number" name="OTP" placeholder="Enter OTP" style="text-align: center;">
+        <input type="email" name="email" id="email" value="<%=email%>" hidden>
+        <input type="submit" value="submit">
     </form>
     <form action="/users/sign-in_resend-Otp" method="post">
-        <input type="submit" name="" id="" value="Resend OTP" >
+        <input type="submit" value="Resend OTP">
     </form>
 </div>

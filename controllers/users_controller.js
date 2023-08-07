@@ -16,6 +16,7 @@ var userNameSignUp;
 var userEmailSignUp;
 var userNameSignIn;
 var userEmailSignIn;
+
 function settinUserDetailForSignUpResendOtp(userName,userEmail)
 { 
   userNameSignUp = userName;
@@ -134,7 +135,9 @@ module.exports.sending_Sign_In_OTP = function(req,res)
          return res.render('Sign_in_otp',{title:'OTP | Varify',email:user.email})
      })
      .catch((err)=>{
-        console.log('error',err)
+        console.log('error in finding user',err);
+        req.flash('error','Invalid email id');
+        return res.redirect('/users/sign-in')
      })
 }
 
@@ -162,11 +165,11 @@ module.exports.logOut = async function (req, res) {
 }
 module.exports.otpVarification_For_SignUp = function (req, res) {
     console.log(req.body);
-    if (Outer_Access_SignUp_OTP == req.body.OTP) {
+    if(Outer_Access_SignUp_OTP == req.body.OTP) {
         User.create({
             name:userNameSignUp,
             email:userEmailSignUp,
-            password:'123',
+            password:'123', //temp password for authentication
             isValid:true
         })
                     .then((user) => {
@@ -194,7 +197,7 @@ module.exports.resendOtp_SignIn = function(req,res)
 module.exports.otpVarification_For_SignIn = function (req, res) {
     console.log(req.body);
     if (Outer_Access_SignIn_OTP == req.body.OTP) {
-        console.log('op1',req.user);
+        req.flash('success','you sign-in successfully !');
         res.redirect('/users/profile');    
         }
      else {

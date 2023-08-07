@@ -51,7 +51,7 @@ var send_Sign_Up_OTP = function (userName,userEmail,req) {
     const jobData = {
         name: userName,
         OTP: OTP,
-        email:userEmail
+        email:userEmail,
     };
     console.log('jobdata',jobData);
     //creating job to send emails
@@ -166,6 +166,7 @@ module.exports.otpVarification_For_SignUp = function (req, res) {
         User.create({
             name:userNameSignUp,
             email:userEmailSignUp,
+            password:'123',
             isValid:true
         })
                     .then((user) => {
@@ -191,10 +192,21 @@ module.exports.resendOtp_SignIn = function(req,res)
     send_Sign_In_OTP(userNameSignIn,userEmailSignIn,req);
 }
 module.exports.otpVarification_For_SignIn = function (req, res) {
+    console.log(req.body);
     if (Outer_Access_SignIn_OTP == req.body.OTP) {
-     return res.redirect('/');
-    } else {
+        console.log('op1',req.user);
+        res.redirect('/users/profile');    
+        }
+     else {
       req.flash('error', 'error in login or invalid OTP')
+      req.logout(function (err) {
+        //logout function  remove the cookie from browser to remove the user identity
+        if (err) {
+            // Handle error
+            console.error(err);
+            return;
+        }
+    })
       return res.redirect('/users/sign-in');
     }
   }

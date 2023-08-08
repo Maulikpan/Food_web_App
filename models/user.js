@@ -11,11 +11,6 @@ const userSchema = new mongoose.Schema({
     password:{
          type:String,
     },
-    isValid:
-    {
-        type: Boolean,
-        required: true
-    }
 }, {
     timestamps: true   //created at....... updated at
 })

@@ -170,7 +170,6 @@ module.exports.otpVarification_For_SignUp = function (req, res) {
             name:userNameSignUp,
             email:userEmailSignUp,
             password:'123', //temp password for authentication
-            isValid:true
         })
                     .then((user) => {
                         console.log('New user added successfully!', user);
@@ -183,7 +182,7 @@ module.exports.otpVarification_For_SignUp = function (req, res) {
                     });
     }
     else {
-        req.flash('error', 'Error in login or invalid OTP');
+        req.flash('error', 'Error in login / invalid OTP');
         return res.redirect('/users/sign-up');
     }
 }
@@ -201,12 +200,10 @@ module.exports.otpVarification_For_SignIn = function (req, res) {
         res.redirect('/users/profile');    
         }
      else {
-      req.flash('error', 'error in login or invalid OTP')
+      req.flash('error', 'error in login / invalid OTP')
       req.logout(function (err) {
-        //logout function  remove the cookie from browser to remove the user identity
         if (err) {
-            // Handle error
-            console.error(err);
+            console.error(err,'error in logout!');
             return;
         }
     })

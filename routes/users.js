@@ -19,5 +19,4 @@ router.post('/sign-up_resend-Otp',usersControllers.resendOtp_SignUp);
 router.post('/otp-varification',usersControllers.sending_Sign_In_OTP);
 router.post('/sign-in_resend-Otp',usersControllers.resendOtp_SignIn);
 router.get('/sign-out', usersControllers.destroySession);
-router.get('/log-out', usersControllers.logOut);
 module.exports = router;      

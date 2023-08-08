@@ -158,11 +158,6 @@ module.exports.destroySession = function (req, res) {
         res.redirect('/');
     });
 }
-module.exports.logOut = async function (req, res) {
-    return res.json({
-        data: "succesfully deleted user account!"
-    })
-}
 module.exports.otpVarification_For_SignUp = function (req, res) {
     console.log(req.body);
     if(Outer_Access_SignUp_OTP == req.body.OTP) {

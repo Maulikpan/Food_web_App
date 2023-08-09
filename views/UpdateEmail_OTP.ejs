@@ -1,11 +1,12 @@
+<link rel="stylesheet" href="/css/UpdateEmailOTP.css">
 <div>
     <form action="/users/UpdateEmailOTP" method="post">
-   <input type="number" name="OTP" id="" placeholder="Enter OTP" required>
-   <input type="email" name="email" id="" value="<%=userEmail%>" hidden>
-   <input type="text" name="name" id="" value="<%=userName%>" hidden>
-   <input type="submit" name="" id="">
-   </form>
-   <form action="/users/resend-Otp-For-UpdateEmail" method="post">
-    <input type="submit" name="" id="" value="Resend OTP" >
-</form>
+        <input type="number" name="OTP" id="" placeholder="Enter OTP" required>
+        <input type="email" name="email" id="" value="<%=userEmail%>" hidden>
+        <input type="text" name="name" id="" value="<%=userName%>" hidden>
+        <input type="submit" name="" id="">
+    </form>
+    <form action="/users/resend-Otp-For-UpdateEmail" method="post">
+        <input type="submit" name="" id="" value="Resend OTP">
+    </form>
 </div>

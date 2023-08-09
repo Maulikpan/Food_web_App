@@ -1,6 +1,8 @@
 <link rel="stylesheet" href="/css/user_profile.css">
 <h1>FOOD ADDA/ <%=title%> page</h1>
 <p>Name:<%=user.name%></p>
-<p>Email:<%=user.email%></p> 
-<a href="/users/updateUserProfile"><button>Update User Profile</button></a>
+<p>Email:<%=user.email%></p>
+<%if(locals.user){%>
+    <a href="/users/updateUserProfile"><button>Update User Profile</button></a>
+<%}%> 
 <!--changes is only in variable part and layout part is fix-->
